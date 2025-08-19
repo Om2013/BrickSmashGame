@@ -1,26 +1,31 @@
-import random
+difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").strip().upper()
 
-# Ask for difficulty
-difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ")
-
-# Normalize input: remove spaces and make uppercase
-difficulty = difficulty.strip().upper()
-
-# If random, pick one
+# Random difficulty if chosen
 if difficulty == "R":
+    import random
     difficulty = random.choice(["E", "M", "H"])
     print(f"Random difficulty chosen: {difficulty}")
 
-# Set grid size based on difficulty
+# Set grid size and ball speed based on difficulty
 if difficulty == "E":
     num_rows, num_cols = 5, 5
+    speed_x, speed_y = 3, -3
 elif difficulty == "M":
     num_rows, num_cols = 7, 7
+    speed_x, speed_y = 5, -5
 elif difficulty == "H":
     num_rows, num_cols = 10, 10
+    speed_x, speed_y = 7, -7
 else:
-    print(f"Invalid input '{difficulty}'! Defaulting to Medium.")
+    print(f"Invalid input '{difficulty}', defaulting to Medium")
     num_rows, num_cols = 7, 7
+    speed_x, speed_y = 5, -5
+
+# Print settings
+print(f"Difficulty: {difficulty}")
+print(f"Grid: {num_rows} rows x {num_cols} cols")
+print(f"Ball speed: ({speed_x}, {speed_y})")
+
 
 #------------------------------Main Game--------------------------------
 import pygame 
