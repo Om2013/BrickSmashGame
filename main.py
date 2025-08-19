@@ -1,4 +1,15 @@
-difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard): ").strip().upper()
+import random
+
+# Ask for difficulty
+difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ")
+
+# Normalize input: remove spaces and make uppercase
+difficulty = difficulty.strip().upper()
+
+# If random, pick one
+if difficulty == "R":
+    difficulty = random.choice(["E", "M", "H"])
+    print(f"Random difficulty chosen: {difficulty}")
 
 # Set grid size based on difficulty
 if difficulty == "E":
@@ -8,12 +19,11 @@ elif difficulty == "M":
 elif difficulty == "H":
     num_rows, num_cols = 10, 10
 else:
-    print("Invalid input! Defaulting to Medium.")
+    print(f"Invalid input '{difficulty}'! Defaulting to Medium.")
     num_rows, num_cols = 7, 7
 
-
-# -------------------------------Main Game--------------------------------------
-import pygame
+#------------------------------Main Game--------------------------------
+import pygame 
 from paddle_design import Paddle  
 from ball_design import Ball 
 from bricks_design import Bricks
@@ -50,7 +60,6 @@ ballhit_sound = pygame.mixer.Sound("ball_hit_sound_bricksmash.mp3")
 # Background music
 background_music = pygame.mixer.Sound("bricksmash_bgmusic.mp3")
 background_music.play(-1)
-background_music.set_volume(1)
 
 # Create paddle and ball
 paddle = Paddle(WINDOW_WIDTH, WINDOW_HEIGHT)
