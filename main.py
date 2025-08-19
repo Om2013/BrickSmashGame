@@ -1,5 +1,3 @@
-
-
 # --------------------- Difficulty ---------------------
 difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").strip().upper()
 
@@ -30,7 +28,6 @@ print(f"Grid: {num_rows} rows x {num_cols} cols")
 print(f"Ball speed x: {speed_x}")
 
 # --------------------- Game Setup ---------------------
-
 import pygame
 import random
 from paddle_design import Paddle
@@ -86,6 +83,8 @@ running = True
 gamewin = False
 gameover = False
 
+total_score = num_rows * num_cols * 10  # 10 points per brick
+
 while running:
     # Handle events
     for event in pygame.event.get():
@@ -110,22 +109,23 @@ while running:
         ball.speed_y *= -1
         ballhit_sound.play()
 
-    # Win/Lose conditions
-    total_score = num_rows * num_cols * 10
-    if ball.score >= total_score:
+    # ------------------ Win/Lose conditions ------------------
+    if ball.score >= total_score and not gamewin:
         gamewin = True
+        ball.speed_x = 0
+        ball.speed_y = 0
         gamewin_text = font.render("CONGRATULATIONS! YOU WON!", True, WHITE)
         gamewin_text_rect = gamewin_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
         background_music.set_volume(0)
-        pygame.time.delay(200)
         gamewin_sound.play()
 
-    if ball.rect.top > WINDOW_HEIGHT:
+    if ball.rect.top > WINDOW_HEIGHT and not gameover:
         gameover = True
+        ball.speed_x = 0
+        ball.speed_y = 0
         defeat_text = font.render("You Lost! Game Over!", True, WHITE)
         defeat_text_rect = defeat_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
         background_music.set_volume(0)
-        pygame.time.delay(200)
         gamelost_sound.play()
 
     # ------------------ Drawing ------------------
