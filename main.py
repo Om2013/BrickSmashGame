@@ -1,8 +1,11 @@
+
+
+# --------------------- Difficulty ---------------------
 difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").strip().upper()
 
 # Random difficulty if chosen
 if difficulty == "R":
-    import random
+    import random 
     difficulty = random.choice(["E", "M", "H"])
     print(f"Random difficulty chosen: {difficulty}")
 
@@ -21,36 +24,32 @@ else:
     num_rows, num_cols = 7, 7
     speed_x, speed_y = 5, -5
 
-# Print settings
+# Print only speed_x
 print(f"Difficulty: {difficulty}")
 print(f"Grid: {num_rows} rows x {num_cols} cols")
-print(f"Ball speed: ({speed_x}, {speed_y})")
+print(f"Ball speed x: {speed_x}")
 
+# --------------------- Game Setup ---------------------
 
-#------------------------------Main Game--------------------------------
-import pygame 
-from paddle_design import Paddle  
-from ball_design import Ball 
+import pygame
+import random
+from paddle_design import Paddle
+from ball_design import Ball
 from bricks_design import Bricks
 
 pygame.init()
 
-# Window setup
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Brick Smash Game")
-pygame.key.set_repeat(1, 30)  # Continuous paddle movement
+pygame.key.set_repeat(1, 30)
 
-# FPS, clock, font
 FPS = 60
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 30)
 
-# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-
 
 # Sprite groups
 paddle_group = pygame.sprite.Group()
@@ -61,22 +60,20 @@ bricks_group = pygame.sprite.Group()
 gamelost_sound = pygame.mixer.Sound("game_over_sound_bricksmash.mp3")
 gamewin_sound = pygame.mixer.Sound("game_win_bricksmash.mp3")
 ballhit_sound = pygame.mixer.Sound("ball_hit_sound_bricksmash.mp3")
-
-# Background music
 background_music = pygame.mixer.Sound("bricksmash_bgmusic.mp3")
 background_music.play(-1)
 
 # Create paddle and ball
 paddle = Paddle(WINDOW_WIDTH, WINDOW_HEIGHT)
 ball = Ball(WINDOW_WIDTH, WINDOW_HEIGHT)
+ball.speed_x = speed_x
+ball.speed_y = speed_y
 paddle_group.add(paddle)
 ball_group.add(ball)
 
-# Create bricks grid
-start_x = 60
-start_y = 60
-spacing_x = 100
-spacing_y = 30
+# Create bricks
+start_x, start_y = 60, 60
+spacing_x, spacing_y = 100, 30
 for row in range(num_rows):
     for col in range(num_cols):
         x = start_x + col * spacing_x
@@ -84,56 +81,54 @@ for row in range(num_rows):
         brick = Bricks(x, y)
         bricks_group.add(brick)
 
-# Game flags
+# --------------------- Game Loop ---------------------
 running = True
 gamewin = False
 gameover = False
 
-# Main loop
 while running:
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    paddle.update()  # Update the paddle
-
-    # Update objects
+    paddle.update()
     ball_group.update()
     bricks_group.update()
 
-    # Collision: ball with bricks
+    # ------------------ Collision Checks ------------------
+    # Ball hits bricks
     hit_bricks = pygame.sprite.spritecollide(ball, bricks_group, True)
     if hit_bricks:
-        ball.speed_y *= -1  # Bounce
-        ball.score += 10    # Increase score
-        ballhit_sound.play()  # Play hit sound
+        ball.speed_y *= -1
+        ball.score += 10
+        ballhit_sound.play()
 
-    # Collision: ball with paddle
+    # Ball hits paddle
     if ball.rect.colliderect(paddle.rect) and ball.speed_y > 0:
-        ball.rect.bottom = paddle.rect.top  # Prevent overlap
-        ball.speed_y *= -1  # Bounce up
-        ballhit_sound.play()  # Play hit sound
+        ball.rect.bottom = paddle.rect.top
+        ball.speed_y *= -1
+        ballhit_sound.play()
 
-    # Win condition
-    if ball.score >= num_rows * num_cols * 10:
+    # Win/Lose conditions
+    total_score = num_rows * num_cols * 10
+    if ball.score >= total_score:
         gamewin = True
         gamewin_text = font.render("CONGRATULATIONS! YOU WON!", True, WHITE)
         gamewin_text_rect = gamewin_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
         background_music.set_volume(0)
         pygame.time.delay(200)
-        gamewin_sound.play()  # Play win sound
+        gamewin_sound.play()
 
-    # Lose condition
     if ball.rect.top > WINDOW_HEIGHT:
+        gameover = True
         defeat_text = font.render("You Lost! Game Over!", True, WHITE)
         defeat_text_rect = defeat_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
         background_music.set_volume(0)
         pygame.time.delay(200)
-        gamelost_sound.play()  # Play lose sound
-        gameover = True
+        gamelost_sound.play()
 
-    # Draw objects
+    # ------------------ Drawing ------------------
     screen.fill(BLACK)
     paddle_group.draw(screen)
     ball_group.draw(screen)
@@ -148,7 +143,7 @@ while running:
     pygame.draw.line(screen, WHITE, (0, 50), (WINDOW_WIDTH, 50), 4)
     pygame.draw.line(screen, WHITE, (0, WINDOW_HEIGHT - 100), (WINDOW_WIDTH, WINDOW_HEIGHT - 100), 4)
 
-    # Game over screen
+    # Game over/win screens
     if gameover:
         screen.fill(BLACK)
         screen.blit(defeat_text, defeat_text_rect)
@@ -158,7 +153,6 @@ while running:
         pygame.quit()
         exit()
 
-    # Game win screen
     if gamewin:
         screen.fill(BLACK)
         screen.blit(gamewin_text, gamewin_text_rect)
@@ -168,9 +162,7 @@ while running:
         pygame.quit()
         exit()
 
-    # Update display
     pygame.display.update()
     clock.tick(FPS)
 
-# Quit
 pygame.quit()
