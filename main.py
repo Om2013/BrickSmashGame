@@ -27,10 +27,6 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Brick Smash Game")
 pygame.key.set_repeat(1, 30)  # Continuous paddle movement
 
-# Music
-pygame.mixer.init()
-pygame.mixer.music.load("bricksmash_bgmusic.mp3")
-
 # FPS, clock, font
 FPS = 60
 clock = pygame.time.Clock()
