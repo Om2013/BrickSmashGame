@@ -1,9 +1,9 @@
+import random 
 # --------------------- Difficulty ---------------------
 difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").strip().upper()
 
 # Random difficulty if chosen
 if difficulty == "R":
-    import random 
     difficulty = random.choice(["E", "M", "H"])
     print(f"Random difficulty chosen: {difficulty}")
 
@@ -29,7 +29,6 @@ print(f"Ball speed x: {speed_x}")
 
 # --------------------- Game Setup ---------------------
 import pygame
-import random
 from paddle_design import Paddle
 from ball_design import Ball
 from bricks_design import Bricks
@@ -57,6 +56,8 @@ bricks_group = pygame.sprite.Group()
 gamelost_sound = pygame.mixer.Sound("game_over_sound_bricksmash.mp3")
 gamewin_sound = pygame.mixer.Sound("game_win_bricksmash.mp3")
 ballhit_sound = pygame.mixer.Sound("ball_hit_sound_bricksmash.mp3")
+
+#Background Music
 background_music = pygame.mixer.Sound("bricksmash_bgmusic.mp3")
 background_music.play(-1)
 
@@ -83,8 +84,6 @@ running = True
 gamewin = False
 gameover = False
 
-total_score = num_rows * num_cols * 10  # 10 points per brick
-
 while running:
     # Handle events
     for event in pygame.event.get():
@@ -96,7 +95,6 @@ while running:
     bricks_group.update()
 
     # ------------------ Collision Checks ------------------
-    # Ball hits bricks
     hit_bricks = pygame.sprite.spritecollide(ball, bricks_group, True)
     if hit_bricks:
         ball.speed_y *= -1
@@ -110,7 +108,8 @@ while running:
         ballhit_sound.play()
 
     # ------------------ Win/Lose conditions ------------------
-    if ball.score >= total_score and not gamewin:
+    # Win: all bricks destroyed
+    if len(bricks_group) == 0 and not gamewin:
         gamewin = True
         ball.speed_x = 0
         ball.speed_y = 0
@@ -119,6 +118,7 @@ while running:
         background_music.set_volume(0)
         gamewin_sound.play()
 
+    # Lose: ball falls below screen
     if ball.rect.top > WINDOW_HEIGHT and not gameover:
         gameover = True
         ball.speed_x = 0
