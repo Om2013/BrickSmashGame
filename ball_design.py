@@ -8,8 +8,6 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.image.load("ball_image.png")
         self.rect = self.image.get_rect()
         self.rect.center = (window_width // 2, window_height // 2)
-        self.speed_x = 5
-        self.speed_y = -5
         self.score=0
         self.lives=3
     def update(self):
@@ -23,3 +21,4 @@ class Ball(pygame.sprite.Sprite):
             self.speed_y *= -1
        # if self.rect.bottom >= WINDOW_HEIGHT:S
             #self.speed_y *= -1
+
