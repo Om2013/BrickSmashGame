@@ -1,9 +1,9 @@
-import random 
 # --------------------- Difficulty ---------------------
 difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").strip().upper()
 
 # Random difficulty if chosen
 if difficulty == "R":
+    import random 
     difficulty = random.choice(["E", "M", "H"])
     print(f"Random difficulty chosen: {difficulty}")
 
