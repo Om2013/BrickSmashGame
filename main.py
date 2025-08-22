@@ -3,7 +3,7 @@ difficulty = input("Select difficulty (E=Easy, M=Medium, H=Hard, R=Random): ").s
 
 # Random difficulty if chosen
 if difficulty == "R":
-    import random 
+    import random
     difficulty = random.choice(["E", "M", "H"])
     print(f"Random difficulty chosen: {difficulty}")
 
@@ -25,7 +25,7 @@ else:
 # Print only speed_x
 print(f"Difficulty: {difficulty}")
 print(f"Grid: {num_rows} rows x {num_cols} cols")
-print(f"Ball speed x: {speed_x}")
+print(f"Ball speed: {speed_x}")
 
 # --------------------- Game Setup ---------------------
 import pygame
@@ -151,6 +151,7 @@ while running:
         pygame.time.delay(2000)
         running = False
         pygame.quit()
+        print("Run to play again")
         exit()
 
     if gamewin:
@@ -161,6 +162,7 @@ while running:
         running = False
         pygame.quit()
         exit()
+        print("Run to play again!")
 
     pygame.display.update()
     clock.tick(FPS)
